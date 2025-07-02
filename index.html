@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GPA Calculator</title>
 
+  <!-- ✅ Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GW8R38N5XD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GW8R38N5XD');
+  </script>
+
   <script>
     if (localStorage.theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -16,9 +25,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="gpa-calcu.css" />
-
-
 </head>
+
 <body class="min-h-screen bg-white dark:bg-[var(--dark-bg)] text-gray-900 dark:text-[var(--dark-text)] transition-soft p-4 sm:p-6 md:p-10 leading-relaxed">
 
   <div class="flex justify-center items-start">
