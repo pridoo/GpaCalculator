@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GPA Calculator</title>
 
-  <!-- ✅ Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GW8R38N5XD"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -23,12 +22,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  
   <link rel="stylesheet" href="gpa-calcu.css" />
 </head>
 
 <body class="min-h-screen bg-white dark:bg-[var(--dark-bg)] text-gray-900 dark:text-[var(--dark-text)] transition-soft p-4 sm:p-6 md:p-10 leading-relaxed">
-
   <div class="flex justify-center items-start">
     <div 
       x-data="gwaApp()" 
@@ -40,23 +37,17 @@
         <h1 class="heading-title text-3xl font-bold text-center sm:text-left w-full sm:w-auto flex-1 leading-relaxed">
           GPA Calculator
         </h1>
-
         <div @click="toggleTheme" class="toggle-switch relative">
-          <div 
-            class="toggle-thumb"
-            :style="theme === 'dark' ? 'left:32px' : 'left:2px'"
-          >
+          <div class="toggle-thumb" :style="theme === 'dark' ? 'left:32px' : 'left:2px'">
             <span x-text="theme === 'dark' ? '🌙' : '☀️'"></span>
           </div>
         </div>
       </div>
 
-
       <div class="mb-10">
         <div class="card rounded-2xl shadow-md border p-6 text-center max-w-md mx-auto leading-relaxed bg-gray-100 dark:bg-[var(--dark-card)]" >
           <div class="text-xl font-semibold mb-2 leading-relaxed">Overall GPA</div>
-          <div
-            class="text-5xl font-extrabold tracking-wide mb-3"
+          <div class="text-5xl font-extrabold tracking-wide mb-3"
             :class="{
               'text-yellow-500': overallGWA && overallGWA <= 1.75,
               'text-blue-500': !overallGWA || overallGWA > 1.75
@@ -67,70 +58,67 @@
         </div>
       </div>
 
+     
       <template x-for="(year, yearIndex) in years" :key="year.id">
-        <div class="card rounded-xl border p-5 mb-8 shadow-sm transition-soft leading-relaxed bg-gray-100 dark:bg-[var(--dark-card)]">
+        <div class="card rounded-xl border p-5 mb-8 shadow-sm transition-soft bg-gray-100 dark:bg-[var(--dark-card)]">
+          <h2 class="text-xl font-semibold mb-4" x-text="getOrdinalYear(yearIndex + 1) + ' Year'"></h2>
 
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold leading-relaxed" x-text="getOrdinalYear(yearIndex + 1) + ' Year'"></h2>
-            <button
-              @click="addSubject(yearIndex)"
-              class="button text-sm px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-soft"
-            >
-              ➕ Add Subject
-            </button>
-          </div>
+         
+          <template x-for="(semester, semIndex) in year.semesters" :key="semester.name">
+            <div class="mb-6">
+              <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold" x-text="semester.name"></h3>
+                <button
+                  @click="addSubject(yearIndex, semIndex)"
+                  class="button text-sm px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  ➕ Add Subject
+                </button>
+              </div>
 
-        <template x-for="(subject, subjIndex) in year.subjects" :key="subject.id">
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-3 items-center leading-relaxed">
-            <input
-            type="text"
-            x-model="subject.name"
-            placeholder="e.g. Intech 1100"
-            class="input sm:col-span-5 px-3 py-2 rounded-lg border w-full"
-            />
+              <!-- Subjects -->
+              <template x-for="(subject, subjIndex) in semester.subjects" :key="subject.id">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-3 items-center">
+                  <input type="text" x-model="subject.name" placeholder="e.g. Intech 1100"
+                    class="input sm:col-span-5 px-3 py-2 rounded-lg border w-full" />
 
-            <!-- Grade Dropdown -->
-            <select
-            x-model="subject.grade"
-            @change="calculateOverallGWA()"
-            class="select sm:col-span-3 px-3 py-2 w-full border border-gray-300 dark:border-[var(--dark-border)] bg-white dark:bg-[var(--dark-card)] text-black dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-            <option value="" disabled selected class="text-gray-400 italic">Select Grade</option>
-            <template x-for="grade in grades" :key="grade">
-                <option :value="grade" x-text="grade"></option>
-            </template>
-            </select>
+                  <select x-model="subject.grade" @change="calculateOverallGWA()"
+                    class="select sm:col-span-3 px-3 py-2 w-full border rounded-xl">
+                    <option value="" disabled selected>Select Grade</option>
+                    <template x-for="grade in grades" :key="grade">
+                      <option :value="grade" x-text="grade"></option>
+                    </template>
+                  </select>
 
-            <!-- Units Dropdown -->
-            <select
-            x-model="subject.units"
-            @change="calculateOverallGWA()"
-            class="select sm:col-span-3 px-3 py-2 w-full border border-gray-300 dark:border-[var(--dark-border)] bg-white dark:bg-[var(--dark-card)] text-black dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-            <option value="" disabled selected class="text-gray-400 italic">Select Units</option>
-            <template x-for="unit in units" :key="unit">
-                <option :value="unit" x-text="unit"></option>
-            </template>
-            </select>
+                  <select x-model="subject.units" @change="calculateOverallGWA()"
+                    class="select sm:col-span-3 px-3 py-2 w-full border rounded-xl">
+                    <option value="" disabled selected>Select Units</option>
+                    <template x-for="unit in units" :key="unit">
+                      <option :value="unit" x-text="unit"></option>
+                    </template>
+                  </select>
 
-            <button
-            @click="removeSubject(yearIndex, subjIndex)"
-            class="sm:col-span-1 text-red-500 hover:text-red-700 text-xl w-full text-left sm:text-center"
-            >
-            &times;
-            </button>
-        </div>
-        </template>
+                  <button @click="removeSubject(yearIndex, semIndex, subjIndex)"
+                    class="sm:col-span-1 text-red-500 hover:text-red-700 text-xl text-left sm:text-center">
+                    &times;
+                  </button>
+                </div>
+              </template>
 
-
-          <div class="mt-4 text-sm leading-relaxed">
-            GWA:
-            <span class="font-semibold" x-text="calculateGWA(year.subjects) || '0.00'"></span>
-          </div>
+              <!-- GWA & Units -->
+              <div class="mt-2 text-sm">
+                GWA:
+                <span class="font-semibold" x-text="calculateGWA(semester.subjects) || '0.00'"></span>
+                &nbsp; | &nbsp;
+                Total Units:
+                <span class="font-semibold" x-text="calculateTotalUnits(semester.subjects)"></span>
+              </div>
+            </div>
+          </template>
         </div>
       </template>
 
-      <div class="text-center mb-12 leading-relaxed">
+      <div class="text-center mb-12">
         <button
           @click="addYear()"
           class="button px-6 py-2 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition-soft"
@@ -138,11 +126,10 @@
           ➕ Add Year
         </button>
       </div>
-
     </div>
   </div>
 
-
+  <!-- Footer -->
   <footer
     x-data="{ showQR: false }"
     class="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4 text-gray-500 dark:text-gray-400 text-base"
@@ -150,15 +137,13 @@
     <div class="flex flex-wrap items-center justify-center gap-4 bg-white dark:bg-[#1e293b] px-6 py-3 rounded-full shadow-md max-w-lg w-full font-medium">
       <p class="text-center">
         © 2025
-        <a href="https://www.facebook.com/alfred.cabatoii" target="_blank" rel="noopener noreferrer"
-          class="text-blue-600 dark:text-blue-400 hover:underline font-semibold">
+        <a href="https://www.facebook.com/alfred.cabatoii" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold">
           Alfred C. Cabato
         </a>
       </p>
-
       <button
         @click="showQR = true"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-full whitespace-nowrap text-base"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-full text-base"
       >
         Penge Piso
       </button>
@@ -181,6 +166,7 @@
     </div>
   </footer>
 
+
   <script>
     function gwaApp() {
       return {
@@ -195,8 +181,19 @@
           this.years = [
             {
               id: Date.now() + Math.random(),
-              subjects: [
-                { id: Date.now() + Math.random(), name: "", grade: "", units: "" }
+              semesters: [
+                {
+                  name: "First Semester",
+                  subjects: [{ id: Date.now() + Math.random(), name: "", grade: "", units: "" }]
+                },
+                {
+                  name: "Second Semester",
+                  subjects: []
+                },
+                { 
+                  name: "Mid Year", 
+                  subjects: []
+                }
               ]
             }
           ];
@@ -208,6 +205,31 @@
           this.theme = this.theme === 'dark' ? 'light' : 'dark';
           localStorage.setItem('theme', this.theme);
           document.documentElement.classList.toggle('dark', this.theme === 'dark');
+        },
+
+        addYear() {
+          this.years.push({
+            id: Date.now() + Math.random(),
+            semesters: [
+              { name: "First Semester", subjects: [] },
+              { name: "Second Semester", subjects: [] },
+              { name: "Mid Year", subjects: [] }
+            ]
+          });
+        },
+
+        addSubject(yearIndex, semIndex) {
+          this.years[yearIndex].semesters[semIndex].subjects.push({
+            id: Date.now() + Math.random(),
+            name: "",
+            grade: "",
+            units: ""
+          });
+        },
+
+        removeSubject(yearIndex, semIndex, subjIndex) {
+          this.years[yearIndex].semesters[semIndex].subjects.splice(subjIndex, 1);
+          this.calculateOverallGWA();
         },
 
         calculateGWA(subjects) {
@@ -223,9 +245,16 @@
           return gwa;
         },
 
+        calculateTotalUnits(subjects) {
+          return subjects.reduce((sum, subj) => {
+            return subj.units ? sum + parseFloat(subj.units) : sum;
+          }, 0);
+        },
+
         calculateOverallGWA() {
           let allSubjects = [];
-          this.years.forEach((y) => allSubjects.push(...y.subjects));
+          this.years.forEach((y) => y.semesters.forEach((s) => allSubjects.push(...s.subjects)));
+
           let totalUnits = 0, totalWeighted = 0;
           allSubjects.forEach((s) => {
             if (s.grade && s.units) {
@@ -233,6 +262,7 @@
               totalWeighted += parseFloat(s.grade) * parseFloat(s.units);
             }
           });
+
           this.overallGWA = totalUnits ? (totalWeighted / totalUnits).toFixed(2) : null;
 
           if (this.overallGWA) {
@@ -244,19 +274,6 @@
           } else {
             this.honorText = "";
           }
-        },
-
-        addYear() {
-          this.years.push({ id: Date.now() + Math.random(), subjects: [] });
-        },
-
-        addSubject(yearIndex) {
-          this.years[yearIndex].subjects.push({ id: Date.now() + Math.random(), name: "", grade: "", units: "" });
-        },
-
-        removeSubject(yearIndex, subjIndex) {
-          this.years[yearIndex].subjects.splice(subjIndex, 1);
-          this.calculateOverallGWA();
         },
 
         getOrdinalYear(n) {
