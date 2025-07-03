@@ -30,11 +30,11 @@
     <div 
       x-data="gwaApp()" 
       x-init="init()" 
-      class="force-dark-bg w-full max-w-6xl p-6 sm:p-10 text-black dark:text-white shadow-2xl rounded-3xl border border-gray-500 dark:border-gray-900 transition-soft"
+      class="force-dark-bg w-full max-w-3xl p-4 sm:p-6 text-black dark:text-white shadow-lg rounded-2xl border border-gray-500 dark:border-gray-900 transition-soft"
     >
 
       <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-        <h1 class="heading-title text-3xl font-bold text-center sm:text-left w-full sm:w-auto flex-1 leading-relaxed">
+        <h1 class="heading-title text-2xl font-bold text-center sm:text-left w-full sm:w-auto flex-1 leading-relaxed">
           GPA Calculator
         </h1>
         <div @click="toggleTheme" class="toggle-switch relative">
@@ -44,23 +44,23 @@
         </div>
       </div>
 
-      <div class="mb-10">
-        <div class="card rounded-2xl shadow-md border p-6 text-center max-w-md mx-auto leading-relaxed bg-gray-100 dark:bg-[var(--dark-card)]" >
-          <div class="text-xl font-semibold mb-2 leading-relaxed">Overall GPA</div>
-          <div class="text-5xl font-extrabold tracking-wide mb-3"
+      <div class="mb-8">
+        <div class="card rounded-2xl shadow-md border p-4 text-center max-w-md mx-auto leading-relaxed bg-gray-100 dark:bg-[var(--dark-card)]" >
+          <div class="text-xl font-semibold mb-1 leading-relaxed">Overall GPA</div>
+          <div class="text-3xl font-extrabold tracking-wide mb-2"
             :class="{
               'text-yellow-500': overallGWA && overallGWA <= 1.75,
               'text-blue-500': !overallGWA || overallGWA > 1.75
             }"
             x-text="overallGWA || '0.00'"
           ></div>
-          <div class="text-lg font-medium" x-text="honorText"></div>
+          <div class="text-base font-medium" x-text="honorText"></div>
         </div>
       </div>
 
      
       <template x-for="(year, yearIndex) in years" :key="year.id">
-        <div class="card rounded-xl border p-5 mb-8 shadow-sm transition-soft bg-gray-100 dark:bg-[var(--dark-card)]">
+        <div class="card rounded-xl border p-4 mb-6 shadow-sm transition-soft bg-gray-100 dark:bg-[var(--dark-card)]">
           <h2 class="text-xl font-semibold mb-4" x-text="getOrdinalYear(yearIndex + 1) + ' Year'"></h2>
 
          
@@ -80,10 +80,10 @@
               <template x-for="(subject, subjIndex) in semester.subjects" :key="subject.id">
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-3 items-center">
                   <input type="text" x-model="subject.name" placeholder="e.g. Intech 1100"
-                    class="input sm:col-span-5 px-3 py-2 rounded-lg border w-full" />
+                    class="input sm:col-span-5 px-2 py-1 rounded-lg border w-full" />
 
                   <select x-model="subject.grade" @change="calculateOverallGWA()"
-                    class="select sm:col-span-3 px-3 py-2 w-full border rounded-xl">
+                    class="select sm:col-span-3 px-2 py-1 w-full border rounded-xl">
                     <option value="" disabled selected>Select Grade</option>
                     <template x-for="grade in grades" :key="grade">
                       <option :value="grade" x-text="grade"></option>
@@ -91,7 +91,7 @@
                   </select>
 
                   <select x-model="subject.units" @change="calculateOverallGWA()"
-                    class="select sm:col-span-3 px-3 py-2 w-full border rounded-xl">
+                    class="select sm:col-span-3 px-2 py-1 w-full border rounded-xl">
                     <option value="" disabled selected>Select Units</option>
                     <template x-for="unit in units" :key="unit">
                       <option :value="unit" x-text="unit"></option>
@@ -121,7 +121,7 @@
       <div class="text-center mb-12">
         <button
           @click="addYear()"
-          class="button px-6 py-2 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition-soft"
+          class="button px-4 py-1 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition-soft"
         >
           ➕ Add Year
         </button>
