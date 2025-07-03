@@ -49,21 +49,19 @@
           <div class="text-xl font-semibold mb-1 leading-relaxed">Overall GPA</div>
           <div class="text-3xl font-extrabold tracking-wide mb-2"
             :class="{
-              'text-yellow-500': overallGWA && overallGWA <= 1.75,
-              'text-blue-500': !overallGWA || overallGWA > 1.75
+              'text-yellow-500': overallGWA && parseFloat(overallGWA) <= 1.75,
+              'text-blue-500': !overallGWA || parseFloat(overallGWA) > 1.75
             }"
-            x-text="overallGWA || '0.00'"
+            x-text="overallGWA || '0.0000'"
           ></div>
           <div class="text-base font-medium" x-text="honorText"></div>
         </div>
       </div>
 
-     
       <template x-for="(year, yearIndex) in years" :key="year.id">
         <div class="card rounded-xl border p-4 mb-6 shadow-sm transition-soft bg-gray-100 dark:bg-[var(--dark-card)]">
           <h2 class="text-xl font-semibold mb-4" x-text="getOrdinalYear(yearIndex + 1) + ' Year'"></h2>
 
-         
           <template x-for="(semester, semIndex) in year.semesters" :key="semester.name">
             <div class="mb-6">
               <div class="flex justify-between items-center mb-2">
@@ -108,7 +106,7 @@
               <!-- GWA & Units -->
               <div class="mt-2 text-sm">
                 GWA:
-                <span class="font-semibold" x-text="calculateGWA(semester.subjects) || '0.00'"></span>
+                <span class="font-semibold" x-text="calculateGWA(semester.subjects) || '0.0000'"></span>
                 &nbsp; | &nbsp;
                 Total Units:
                 <span class="font-semibold" x-text="calculateTotalUnits(semester.subjects)"></span>
@@ -165,8 +163,6 @@
       </div>
     </div>
   </footer>
-
-
 
   <script>
     function gwaApp() {
@@ -241,7 +237,7 @@
               totalWeighted += parseFloat(s.grade) * parseFloat(s.units);
             }
           });
-          const gwa = totalUnits ? (totalWeighted / totalUnits).toFixed(2) : null;
+          const gwa = totalUnits ? (totalWeighted / totalUnits).toFixed(4) : null;
           this.calculateOverallGWA();
           return gwa;
         },
@@ -264,7 +260,7 @@
             }
           });
 
-          this.overallGWA = totalUnits ? (totalWeighted / totalUnits).toFixed(2) : null;
+          this.overallGWA = totalUnits ? (totalWeighted / totalUnits).toFixed(4) : null;
 
           if (this.overallGWA) {
             const gwa = parseFloat(this.overallGWA);
